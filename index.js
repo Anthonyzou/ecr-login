@@ -45,7 +45,6 @@ ecr
       console.log('docker ' + command.join(' '));
     } else {
       const child = spawn('docker', command);
-      child.stdin.pipe(process.stdin);
       child.stdout.pipe(process.stdout);
     }
   });
