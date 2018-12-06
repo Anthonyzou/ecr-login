@@ -5,8 +5,8 @@ in nodejs form.
 
 # Why?
 
-Mainly for CI and CD integrations rather than include this in your codebase
-or install the aws cli everytime, if you have nodejs handy you could use this script.
+Mainly for CI and CD integrations rather than including this in your codebase
+or installing the aws cli every time, if you have nodejs handy you could use this script.
 
 # Usage
 
