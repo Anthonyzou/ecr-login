@@ -4,7 +4,7 @@ const aws4 = require('aws4');
 const commander = require('commander');
 const { spawn } = require('child_process');
 const awscred = require('awscred');
-const axios = require('axios');
+const https = require('https');
 
 
 awscred.load(async (err, { credentials }) => {
@@ -33,14 +33,29 @@ awscred.load(async (err, { credentials }) => {
     accessKeyId: commander.key,
     secretAccessKey: commander.secret,
   });
-  const res = await axios({
-    url: `https://${sign.hostname}/`,
-    method: sign.method,
-    path: sign.path,
-    headers: sign.headers,
-    data: sign.body,
-  });
-  const { authorizationData } = res.data;
+
+
+  const res = await new Promise((resolve) => {
+    const req = https.request({
+      hostname: sign.hostname,
+      port: 443,
+      method: sign.method,
+      path: sign.path,
+      headers: sign.headers,
+    }, r => {
+      var body = '';
+      r.on('data', function (chunk) {
+        body = body + chunk;
+      });
+
+      r.on('end', function () {
+        resolve(JSON.parse(body));
+      });
+    });
+    req.write(sign.body)
+    req.end()
+  })
+  const { authorizationData } = res;
   const [user, pass] = Buffer.from(
     authorizationData[0].authorizationToken,
     'base64'
