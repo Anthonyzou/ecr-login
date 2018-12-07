@@ -13,7 +13,10 @@
     "ecr-login": "index.js"
   },
   "dependencies": {
-    "aws-sdk": "*",
+    "@types/axios": "0.14.0",
+    "aws4": "1.8.0",
+    "awscred": "1.4.2",
+    "axios": "0.18.0",
     "commander": "2.19.0"
   }
 }
