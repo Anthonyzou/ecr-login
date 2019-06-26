@@ -8,13 +8,13 @@
     "url": "https://github.com/Anthonyzou/ecr-login"
   },
   "author": "Anthony Ou",
-  "license": "ISC",
+  "license": "MIT",
   "bin": {
     "ecr-login": "index.js"
   },
   "dependencies": {
     "aws4": "1.8.0",
     "awscred": "1.4.2",
-    "commander": "2.19.0"
+    "commander": "2.20.0"
   }
 }
