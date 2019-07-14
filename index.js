@@ -10,14 +10,18 @@ awscred.load(async (err, { credentials }) => {
   commander
     .option('-e, --echo', 'print to stdout', false)
     .option('-r, --region [region]', 'aws region', 'ca-central-1')
-    .option('-k, --key [key]', 'aws api key in ENV or config')
-    .option('-s, --secret [secret]', 'aws api key secret in ENV or config')
+    .option('-k, --key [key]', 'aws api key', credentials.accessKeyId)
+    .option(
+      '-s, --secret [secret]',
+      'aws api key secret',
+      credentials.secretAccessKey
+    )
     .parse(process.argv);
 
   if (err) throw err;
   const opts = {
     service: 'ecr',
-    region: commander.region || 'ca-central-1',
+    region: commander.region,
     signQuery: false,
     headers: {
       'Content-Type': 'application/x-amz-json-1.1',
@@ -29,8 +33,8 @@ awscred.load(async (err, { credentials }) => {
   };
 
   const sign = aws4.sign(opts, {
-    accessKeyId: commander.key || credentials.accessKeyId,
-    secretAccessKey: commander.secret || credentials.secretAccessKey,
+    accessKeyId: commander.key,
+    secretAccessKey: commander.secret,
   });
 
   const res = await new Promise(resolve => {
