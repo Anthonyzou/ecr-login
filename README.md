@@ -5,13 +5,10 @@ in nodejs form.
 
 # Why?
 
-Mainly for CI and CD integrations rather than including this in your codebase
-or installing the aws cli every time, if you have nodejs handy you could use this script.
+Mainly for CI and CD integrations rather installing the aws cli every time, if you have nodejs handy you could use this script.
 
 The size of this library is also kept small by not using `aws-sdk` and this library is
 about .5MB in size.
-
-
 
 # Usage
 
