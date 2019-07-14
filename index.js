@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const aws4 = require('aws4');
-const commander = require('commander');
-const { spawn } = require('child_process');
-const awscred = require('awscred');
-const https = require('https');
+var aws4 = require('aws4');
+var commander = require('commander');
+var { spawn } = require('child_process');
+var awscred = require('awscred');
+var https = require('https');
 
-awscred.load(async (err, { credentials }) => {
+awscred.load(function(err, { credentials }) {
   if (err) throw err;
   commander
     .option('-e, --echo', 'print to stdout', false)
@@ -15,7 +15,7 @@ awscred.load(async (err, { credentials }) => {
     .option('-s, --secret [secret]', 'aws api secret key')
     .parse(process.argv);
 
-  const opts = {
+  var opts = {
     service: 'ecr',
     region: commander.region,
     signQuery: false,
@@ -28,14 +28,14 @@ awscred.load(async (err, { credentials }) => {
     path: '/',
   };
 
-  const sign = aws4.sign(opts, {
+  var sign = aws4.sign(opts, {
     // dont use in commander defaults since it can show secrets when showing help
     accessKeyId: commander.key || credentials.accessKeyId,
     secretAccessKey: commander.secret || credentials.secretAccessKey,
   });
 
-  const res = await new Promise(resolve => {
-    const req = https.request(
+  new Promise(function(resolve) {
+    var req = https.request(
       {
         hostname: sign.hostname,
         port: 443,
@@ -43,7 +43,7 @@ awscred.load(async (err, { credentials }) => {
         path: sign.path,
         headers: sign.headers,
       },
-      r => {
+      function(r) {
         var body = '';
         r.on('data', function(chunk) {
           body = body + chunk;
@@ -56,21 +56,22 @@ awscred.load(async (err, { credentials }) => {
     );
     req.write(sign.body);
     req.end();
-  });
-  const { authorizationData } = res;
-  const [user, pass] = Buffer.from(
-    authorizationData[0].authorizationToken,
-    'base64'
-  )
-    .toString()
-    .split(':');
-  const proxyEndpoint = authorizationData[0].proxyEndpoint;
+  }).then(function(res) {
+    var { authorizationData } = res;
+    var [user, pass] = Buffer.from(
+      authorizationData[0].authorizationToken,
+      'base64'
+    )
+      .toString()
+      .split(':');
+    var proxyEndpoint = authorizationData[0].proxyEndpoint;
 
-  const command = ['login', '-u', user, '-p', pass, proxyEndpoint];
-  if (commander.echo) {
-    console.log('docker ' + command.join(' '));
-  } else {
-    const child = spawn('docker', command);
-    child.stdout.pipe(process.stdout);
-  }
+    var command = ['login', '-u', user, '-p', pass, proxyEndpoint];
+    if (commander.echo) {
+      console.log('docker ' + command.join(' '));
+    } else {
+      var child = spawn('docker', command);
+      child.stdout.pipe(process.stdout);
+    }
+  });
 });
