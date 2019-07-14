@@ -17,7 +17,7 @@ awscred.load(async (err, { credentials }) => {
   if (err) throw err;
   const opts = {
     service: 'ecr',
-    region: 'ca-central-1',
+    region: commander.region || 'ca-central-1',
     signQuery: false,
     headers: {
       'Content-Type': 'application/x-amz-json-1.1',
