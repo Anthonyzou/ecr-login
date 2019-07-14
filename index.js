@@ -7,18 +7,14 @@ const awscred = require('awscred');
 const https = require('https');
 
 awscred.load(async (err, { credentials }) => {
+  if (err) throw err;
   commander
     .option('-e, --echo', 'print to stdout', false)
     .option('-r, --region [region]', 'aws region', 'ca-central-1')
-    .option('-k, --key [key]', 'aws api key', credentials.accessKeyId)
-    .option(
-      '-s, --secret [secret]',
-      'aws api key secret',
-      credentials.secretAccessKey
-    )
+    .option('-k, --key [key]', 'aws api key')
+    .option('-s, --secret [secret]', 'aws api secret key')
     .parse(process.argv);
 
-  if (err) throw err;
   const opts = {
     service: 'ecr',
     region: commander.region,
@@ -33,8 +29,9 @@ awscred.load(async (err, { credentials }) => {
   };
 
   const sign = aws4.sign(opts, {
-    accessKeyId: commander.key,
-    secretAccessKey: commander.secret,
+    // dont use in commander defaults since it can show secrets when showing help
+    accessKeyId: commander.key || credentials.accessKeyId,
+    secretAccessKey: commander.secret || credentials.secretAccessKey,
   });
 
   const res = await new Promise(resolve => {
