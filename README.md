@@ -8,9 +8,21 @@ in nodejs form.
 Mainly for CI and CD integrations rather installing the aws cli every time, if you have nodejs handy you could use this program.
 
 The size of this library is also kept small by not using `aws-sdk` and this library is
-about .5MB in size.
+about 200kb in size.
+
+# Installation
+
+## Globally
+
+`npm i -g aws-ecr-login`
+
+## Locally
+
+`npm i aws-ecr-login`
 
 # Usage
+
+In the command line use `ecr-login` or `npx ecr-login`
 
 ```
 Usage: ecr-login [options]
