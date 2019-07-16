@@ -28,9 +28,9 @@ In the command line use `ecr-login` or `npx ecr-login`
 Usage: ecr-login [options]
 
 Options:
--e, --echo print to stdout
--r, --region [region] aws region (default: "ca-central-1")
--k, --key [key] aws api key
--s, --secret [secret] aws api key secret
--h, --help output usage information
+  -e, --echo             print to stdout
+  -r, --region [region]  aws region (default: "ca-central-1")
+  -k, --key [key]        AWS API key. Optional, resolves credentials similar to AWS CLI
+  -s, --secret [secret]  AWS API secret key. Optional, resolves credentials similar to AWS CLI
+  -h, --help             output usage information
 ```

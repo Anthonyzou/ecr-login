@@ -11,8 +11,14 @@ awscred.load(function(err, { credentials }) {
   commander
     .option('-e, --echo', 'print to stdout', false)
     .option('-r, --region [region]', 'aws region', 'ca-central-1')
-    .option('-k, --key [key]', 'aws api key')
-    .option('-s, --secret [secret]', 'aws api secret key')
+    .option(
+      '-k, --key [key]',
+      'AWS API key. Optional, resolves credentials similar to AWS CLI'
+    )
+    .option(
+      '-s, --secret [secret]',
+      'AWS API secret key. Optional, resolves credentials similar to AWS CLI'
+    )
     .parse(process.argv);
 
   var opts = {
