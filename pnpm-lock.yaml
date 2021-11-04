@@ -1,0 +1,26 @@
+lockfileVersion: 5.3
+
+specifiers:
+  aws4: 1.11.0
+  awscred: 1.5.0
+  commander: 8.3.0
+
+dependencies:
+  aws4: 1.11.0
+  awscred: 1.5.0
+  commander: 8.3.0
+
+packages:
+
+  /aws4/1.11.0:
+    resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
+    dev: false
+
+  /awscred/1.5.0:
+    resolution: {integrity: sha512-EkdH0O/gp5LOAU/CxCkeo6BF8qdGRmhFkVYMaNNZiNTgBHg0EpLswdtwhXZoC4t/NX5Ctx43WHHQd1Z3KrFQgg==}
+    dev: false
+
+  /commander/8.3.0:
+    resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
+    engines: {node: '>= 12'}
+    dev: false

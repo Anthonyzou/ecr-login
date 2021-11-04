@@ -1,29 +1,31 @@
 #!/usr/bin/env node
 
 var aws4 = require('aws4');
-var commander = require('commander');
+var { Command } = require('commander');
 var { spawn } = require('child_process');
 var awscred = require('awscred');
 var https = require('https');
 
-awscred.load(function(err, { credentials }) {
+const options = new Command()
+  .option('-e, --echo', 'print to stdout', false)
+  .option('-r, --region [region]', 'aws region', 'ca-central-1')
+  .option(
+    '-k, --key [key]',
+    'AWS API key. Optional, resolves credentials similar to AWS CLI'
+  )
+  .option(
+    '-s, --secret [secret]',
+    'AWS API secret key. Optional, resolves credentials similar to AWS CLI'
+  )
+  .parse(process.argv)
+  .opts();
+
+awscred.load(function (err, { credentials }) {
   if (err) throw err;
-  commander
-    .option('-e, --echo', 'print to stdout', false)
-    .option('-r, --region [region]', 'aws region', 'ca-central-1')
-    .option(
-      '-k, --key [key]',
-      'AWS API key. Optional, resolves credentials similar to AWS CLI'
-    )
-    .option(
-      '-s, --secret [secret]',
-      'AWS API secret key. Optional, resolves credentials similar to AWS CLI'
-    )
-    .parse(process.argv);
 
   var opts = {
     service: 'ecr',
-    region: commander.region,
+    region: options.region,
     signQuery: false,
     headers: {
       'Content-Type': 'application/x-amz-json-1.1',
@@ -36,11 +38,11 @@ awscred.load(function(err, { credentials }) {
 
   var sign = aws4.sign(opts, {
     // dont use in commander defaults since it can show secrets when showing help
-    accessKeyId: commander.key || credentials.accessKeyId,
-    secretAccessKey: commander.secret || credentials.secretAccessKey,
+    accessKeyId: options.key || credentials.accessKeyId,
+    secretAccessKey: options.secret || credentials.secretAccessKey,
   });
 
-  new Promise(function(resolve) {
+  new Promise(function (resolve) {
     var req = https.request(
       {
         hostname: sign.hostname,
@@ -49,20 +51,20 @@ awscred.load(function(err, { credentials }) {
         path: sign.path,
         headers: sign.headers,
       },
-      function(r) {
+      function (r) {
         var body = '';
-        r.on('data', function(chunk) {
+        r.on('data', function (chunk) {
           body = body + chunk;
         });
 
-        r.on('end', function() {
+        r.on('end', function () {
           resolve(JSON.parse(body));
         });
       }
     );
     req.write(sign.body);
     req.end();
-  }).then(function(res) {
+  }).then(function (res) {
     var { authorizationData } = res;
     var [user, pass] = Buffer.from(
       authorizationData[0].authorizationToken,
@@ -73,7 +75,7 @@ awscred.load(function(err, { credentials }) {
     var proxyEndpoint = authorizationData[0].proxyEndpoint;
 
     var command = ['login', '-u', user, '-p', pass, proxyEndpoint];
-    if (commander.echo) {
+    if (options.echo) {
       console.log('docker ' + command.join(' '));
     } else {
       var child = spawn('docker', command);
